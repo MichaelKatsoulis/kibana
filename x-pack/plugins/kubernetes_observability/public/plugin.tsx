@@ -49,7 +49,7 @@ export class kubernetesObservability implements Plugin {
     // const results =  core.http.get('/kubernetes/nodes/memory');
     const publicK8sObservabilityClient = new PublicKubernetesObservabilityClient(core.http);
     core.application.register({
-      id: 'kubernetesObservability',
+      id: 'kubernetesObservability2',
       title: i18n.translate('xpack.fleet.K8sObservabilityAppTitle', {
         defaultMessage: 'Kubernetes Observability',
       }),

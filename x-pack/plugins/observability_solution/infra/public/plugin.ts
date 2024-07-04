@@ -15,6 +15,32 @@ import {
   AppDeepLinkLocations,
 } from '@kbn/core/public';
 import { i18n } from '@kbn/i18n';
+import ReactDOM from 'react-dom';
+import {
+  useEuiTheme,
+  EuiSpacer,
+  EuiText,
+  EuiTitle,
+  EuiFlexGroup,
+  EuiFlexItem,
+  EuiButtonEmpty,
+  EuiDescribedFormGroup,
+  EuiFormRow,
+  EuiSuperSelect,
+  EuiButtonGroup,
+  EuiCodeBlock,
+  EuiPortal,
+  EuiFlyout,
+  EuiFlyoutBody,
+  EuiFlyoutFooter,
+  EuiFlyoutHeader,
+  EuiButton,
+  EuiToolTip,
+  EuiIcon,
+  EuiBasicTableColumn,
+  EuiInMemoryTable,
+} from '@elastic/eui';
+
 import { enableInfrastructureHostsView } from '@kbn/observability-plugin/public';
 import { ObservabilityTriggerId } from '@kbn/observability-shared-plugin/common';
 import { BehaviorSubject, combineLatest, from } from 'rxjs';
@@ -240,6 +266,36 @@ export class Plugin implements InfraClientPluginClass {
         },
       });
     }
+
+
+    core.application.register({
+      id: 'kubernetesObservability',
+      title: i18n.translate('xpack.infra.kubernetesobservability.pluginTitle', {
+        defaultMessage: 'Kubernetes Observability',
+      }),
+      euiIconType: 'logoObservability',
+      order: 8100,
+      appRoute: '/app/kubernetesObservability',
+      // !! Need to be kept in sync with the routes in x-pack/plugins/observability_solution/infra/public/pages/logs/page_content.tsx
+      category: DEFAULT_APP_CATEGORIES.observability,
+      async mount({ element }: AppMountParameters) {
+        ReactDOM.render([<div><EuiTitle size="l">
+                            <h2 id="KubernetesObservabilityTitle">
+                                <FormattedMessage
+                                  id="xpack.fleet.kubernetesObservability"
+                                  defaultMessage="Kubernetes Observability"
+                                />
+                            </h2>
+                          </EuiTitle>
+                          <EuiSpacer size="l" />
+                          <EuiSpacer size="l" />
+                          </div>,
+                        <KubernetesObservabilityComp client={publicK8sObservabilityClient} />],
+                        element
+        )
+        return () => ReactDOM.unmountComponentAtNode(element);
+      },
+    });
 
     // !! Need to be kept in sync with the routes in x-pack/plugins/observability_solution/infra/public/pages/metrics/index.tsx
     const getInfraDeepLinks = ({
